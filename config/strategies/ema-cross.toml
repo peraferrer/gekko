@@ -1,0 +1,21 @@
+fast = 12
+slow = 26
+trend = 50
+canddlesPositiveTrend = 10
+
+[trailing-stop]
+percentage = 4
+
+[stoploss]
+enabled = true
+threshold = 0.985
+
+[macd]
+fast = 12
+slow = 26
+signal = 9
+
+[rsi]
+period = 14
+high = 70
+low = 40

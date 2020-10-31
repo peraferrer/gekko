@@ -131,9 +131,9 @@ server.listen(config.api.port, config.api.host, '::', () => {
   // only open a browser when running `node gekko`
   // this prevents opening the browser during development
   if(!isDevServer && !config.headless) {
-    opn(location)
-      .catch(err => {
-        console.log('Something went wrong when trying to open your web browser. UI is running on ' + location + '.');
-    });
+    // opn(location)
+    //   .catch(err => {
+    //     console.log('Something went wrong when trying to open your web browser. UI is running on ' + location + '.');
+    // });
   }
 });
