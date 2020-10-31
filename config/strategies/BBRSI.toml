@@ -1,0 +1,24 @@
+interval = 14
+
+[thresholds]
+low = 40
+high = 60
+persistence = 1
+
+[bbands]
+TimePeriod = 20
+NbDevUp = 2
+NbDevDn = 2
+
+[trailingstop]
+enabled = true
+percentage = 4
+
+[macd]
+fast = 12
+slow = 26
+signal = 9
+
+[bb]
+period = 20
+stdDevs = 2
