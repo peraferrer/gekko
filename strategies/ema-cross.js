@@ -62,8 +62,6 @@ strat.check = function(candle) {
 
     const rsi = this.tulipIndicators.rsi.result.result
 
-    const trailPercentage = this.settings["trailing-stop"].percentage
-
     let macd = this.tulipIndicators.macd.result
     macd.diff = (macd.macd/macd.macdSignal).toFixed(2);
 
@@ -86,21 +84,42 @@ strat.check = function(candle) {
   
     if (this.requiredHistory < this.candleCount) {
 
-      // SELL
-      if ('buy' === this.prevAction && ((isEmaCross && this.emaDirection === 'DOWN') || rsi < this.settings.rsi.low)) {
-        this.advice('short');
-        this.prevAction = 'sell'
-        console.log("SELL - %s - MACD: %s - SIGNAL: %s - HISTOGRAM: %s - Close: %s - DIFF %s - RSI: %s - EmaCross: %s".red, candle.start.format("DD-MM-YYYY HH"), macd.macd.toFixed(0), macd.macdSignal.toFixed(0), macd.macdHistogram.toFixed(0), candle.close.toFixed(0), emaDiff, rsi, this.emaDirection)
+      // TRAILING STOP
+      if (this.settings.trailingstop.enabled) {
 
-      // BUY  
-      } else if ('sell' === this.prevAction && isEmaCross && this.emaDirection === 'UP') {
+        if (isEmaCross && this.emaDirection === 'UP') {
+          this.advice({
+            direction: 'long', // or short
+            trigger: { // ignored when direction is not "long"
+              type: 'trailingStop',
+              trailPercentage: this.settings.trailingstop.percentage
+                // or:
+                // trailValue: 100
+            }
+          });
+          console.log("BUY - %s - MACD: %s - SIGNAL: %s - HISTOGRAM: %s - Close: %s - DIFF %s - RSI: %s - EmaCross: %s".brightGreen, candle.start.format("DD-MM-YYYY HH"), macd.macd.toFixed(0), macd.macdSignal.toFixed(0), macd.macdHistogram.toFixed(0), candle.close.toFixed(0), emaDiff, rsi, this.emaDirection)
 
-          if (emaDiff > 0.1) {
-            this.advice('long');
-            this.prevAction = 'buy'
-            console.log("BUY - %s - MACD: %s - SIGNAL: %s - HISTOGRAM: %s - Close: %s - DIFF %s - RSI: %s - EmaCross: %s".brightGreen, candle.start.format("DD-MM-YYYY HH"), macd.macd.toFixed(0), macd.macdSignal.toFixed(0), macd.macdHistogram.toFixed(0), candle.close.toFixed(0), emaDiff, rsi, this.emaDirection)
-          }
+        }
+
+      } else {
+        // SELL
+        if ('buy' === this.prevAction && ((isEmaCross && this.emaDirection === 'DOWN') || rsi < this.settings.rsi.low)) {
+          this.advice('short');
+          this.prevAction = 'sell'
+          console.log("SELL - %s - MACD: %s - SIGNAL: %s - HISTOGRAM: %s - Close: %s - DIFF %s - RSI: %s - EmaCross: %s".red, candle.start.format("DD-MM-YYYY HH"), macd.macd.toFixed(0), macd.macdSignal.toFixed(0), macd.macdHistogram.toFixed(0), candle.close.toFixed(0), emaDiff, rsi, this.emaDirection)
+
+        // BUY  
+        } else if ('sell' === this.prevAction && isEmaCross && this.emaDirection === 'UP') {
+
+            if (emaDiff > 0.1) {
+              this.advice('long');
+              this.prevAction = 'buy'
+              console.log("BUY - %s - MACD: %s - SIGNAL: %s - HISTOGRAM: %s - Close: %s - DIFF %s - RSI: %s - EmaCross: %s".brightGreen, candle.start.format("DD-MM-YYYY HH"), macd.macd.toFixed(0), macd.macdSignal.toFixed(0), macd.macdHistogram.toFixed(0), candle.close.toFixed(0), emaDiff, rsi, this.emaDirection)
+            }
+        }
+
       }
+
 
     //   if (this.settings.stoploss.enabled) {
 
@@ -112,6 +131,8 @@ strat.check = function(candle) {
     //         trigger: { // ignored when direction is not "long"
     //           type: 'trailingStop',
     //           trailPercentage: trailPercentage
+                // or:
+                // trailValue: 100
     //         }
     //       });
     //     }

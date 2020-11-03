@@ -1,0 +1,10 @@
+{
+    "apps" : [{
+        "name"        : "gekko",
+        "script"      : "gekko.js",
+        "args"        : ["--ui"],
+        "watch"       : ["config", "strategies"],
+        "ignore_watch": ["exchange", "logs", "history", "node_modules"],
+        "log_date_format"  : "YYYY-MM-DD HH:mm Z"
+    }]
+}

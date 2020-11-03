@@ -3,7 +3,8 @@ slow = 26
 trend = 50
 canddlesPositiveTrend = 10
 
-[trailing-stop]
+[trailingstop]
+enabled = true
 percentage = 4
 
 [stoploss]
