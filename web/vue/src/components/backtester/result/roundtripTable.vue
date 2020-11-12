@@ -18,7 +18,7 @@
           td {{ round(rt.entryBalance) }}
           td {{ round(rt.exitBalance) }}
           template(v-if="Math.sign(rt.pnl)===-1")
-            td.loss {{ Math.sign(rt.pnl)*rt.pnl.toFixed(2) }}
+            td.loss {{ rt.pnl.toFixed(2) }}
             td.loss {{ rt.profit.toFixed(2) }}%
           template(v-else)
             td.profit {{ rt.pnl.toFixed(2) }}

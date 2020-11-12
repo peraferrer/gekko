@@ -1,0 +1,32 @@
+strategie = 1
+
+[ema]
+fast = 12
+slow = 26
+trend = 50
+diffFastLow = 0.2
+
+[vwma]
+period = 10
+
+[macd]
+fast = 12
+slow = 26
+signal = 9
+
+[rsi]
+period = 14
+high = 70
+low = 40
+
+[bb]
+period = 20
+mult = 2
+
+[trailingstop]
+overMaxPrice = -2.5
+
+[stoploss]
+abruptLoss = -1.5
+overBuy = -2
+

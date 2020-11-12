@@ -1,5 +1,5 @@
 var deepEqual = require('deep-equal')
-var Trend = require('trend')
+const createTrend = require('trendline')
 var FifoArray = require('fifo-array')
 var colors = require('colors')
 
@@ -8,6 +8,11 @@ var strat = {};
 
 // Prepare everything our strat needs
 strat.init = function() {
+    this.on("advice", event => {
+      console.log(event);
+      this.stoplossCounter++
+    })
+
     this.addTulipIndicator('slow', 'ema', {
         optInTimePeriod: this.settings.slow
     })
@@ -39,7 +44,7 @@ strat.init = function() {
     this.prevCandlePositiveCounter = 0
     this.trends = new FifoArray(100)
     this.trend = 0
-    this.trendPositiveCounter = 0
+    this.trendAngle = 0
     this.prevAction = 'sell'
     this.emaDirection = ''
     this.emaDirectionPrev = ''
@@ -58,7 +63,7 @@ strat.check = function(candle) {
     const emaDiff = ((fast/slow-1) * 100).toFixed(2)
     let isEmaCross = false
 
-    const trend = this.tulipIndicators.fast.result.result
+    const trend = this.tulipIndicators.trend.result.result
 
     const rsi = this.tulipIndicators.rsi.result.result
 
@@ -146,29 +151,17 @@ strat.check = function(candle) {
     
     this.prevSlow = slow
 
-    this.trends.push(trend)
-
-    this.trend = Trend(this.trends, {
-      lastPoints: 20,
-      avgPoints: 20,
-      avgMinimum: 20,
-      reversed: false
+    this.trends.push({
+      date: this.candle.start,
+      ema: trend
     })
+
+    this.trendAngle = createTrend(this.trends, 'ema', 'date')
+
+    console.log(this.trendAngle.slope, trend)
 
     this.emaDirectionPrev = this.emaDirection
 
-    if (this.trend >= 1) {
-        this.trendPositiveCounter++
-    } else {
-        this.trendPositiveCounter = 0
-    }
-
-    if (candle.vwp > candle.close) {
-      this.prevCandlePositiveCounter++
-      //console.log(this.prevCandlePositiveCounter)
-    } else {
-      this.prevCandlePositiveCounter = 0
-    }
 
 }
   
@@ -193,6 +186,9 @@ strat.end = function() {
   // your code!
   console.log("Candles: ", this.candleCount)
   console.log("Stop Loss: ", this.stoplossCounter)
+  console.log()
+  console.log(this.emit)
+  
 }
 
 module.exports = strat;

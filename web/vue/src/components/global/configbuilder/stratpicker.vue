@@ -42,10 +42,10 @@ export default {
       strategies: [],
 
       candleSizeUnit: 'hours',
-      rawCandleSize: 1,
+      rawCandleSize: 4,
 
-      strategy: 'MACD',
-      historySize: 10,
+      strategy: 'dev',
+      historySize: 30,
 
       rawStratParams: '',
       rawStratParamsError: false,
