@@ -5,6 +5,11 @@
         "args"        : ["--ui"],
         "watch"       : ["config", "strategies"],
         "ignore_watch": ["exchange", "logs", "history", "node_modules"],
-        "log_date_format"  : "YYYY-MM-DD HH:mm Z"
+        
+        "log_date_format"  : "YYYY-MM-DD HH:mm Z",
+        "error_file": "err.log",
+        "out_file": "out.log",
+        "log_file": "combined.log",
+        "time": false
     }]
 }
